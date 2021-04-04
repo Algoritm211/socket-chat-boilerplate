@@ -1,25 +1,28 @@
-import logo from './logo.svg';
 import './App.css';
+import FormChat from "./components/FormChat/FormChat";
+import ChatStore from './store/chatStore'
+import {observer} from "mobx-react-lite";
+import EntryForm from "./components/EntryForm/EntryForm";
+import {useEffect} from "react";
 
 function App() {
+  const {isAuth, stopMessageListening, startMessageListening} = ChatStore
+
+  useEffect(() => {
+    startMessageListening()
+
+    return () => {
+      stopMessageListening()
+    }
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {isAuth ? (
+        <FormChat />
+      ) : (<EntryForm />)}
     </div>
   );
 }
 
-export default App;
+export default observer(App);
